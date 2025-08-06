@@ -1,0 +1,79 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(120deg, #ffb347 0%, #ffcc33 50%, #ff7e5f 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.container {
+    width: 90%;
+    max-width: 400px;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+}
+.password-container {
+    position: relative;
+}
+.password-container .toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: linear-gradient(120deg, #ffb347 0%, #ffcc33 50%, #ff7e5f 100%);
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+button:hover {
+    background: linear-gradient(120deg, #ff7e5f 0%, #cc9e15 30%, #4d4130 60%);
+}
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+}
+.login-link a {
+    color: #ff7e5f;
+    text-decoration: none;
+}
+.login-link a:hover {
+    text-decoration: underline;
+}
+#formmessage {
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}

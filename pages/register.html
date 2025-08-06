@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | jiji FOODS</title>
+    <link rel="stylesheet" href="/styles/register.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Create Account</h2>
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="email" id="email" placeholder="Email Address" required>
+
+            <label for="role">Register as:</label>
+            <select id="role" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="customer">Customer</option>
+                <option value="vendor">Vendor</option>
+            </select>
+
+            <div class="password-container">
+                <input type="password" id="password" placeholder="password" required>
+                <span class="toggle" onclick="togglePassword('password')">Show</span>
+            </div>
+
+            <div class="password-container">
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                <span class="toggle" onclick="togglePassword('confirmPassword')">Show</span>
+            </div>
+
+            <button type="submit">Register</button>
+
+            <div id="formMessage" style="margin-top: 10px; color: green;"></div>
+
+            <p class="login-link">Already have an account? <a href="/pages/login.html">Login</a>
+            </form>
+        </div>
+ <script src="/scripts/register.js"></script>   
+</body>
+</html>
