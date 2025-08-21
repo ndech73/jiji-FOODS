@@ -1,0 +1,129 @@
+/* Main dashboard layout */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+/* Sidebar styles */
+.sidebar {
+  background: linear-gradient(135deg, #ffb347 0%, #ffcc33 60%, #ff7e5f 100%);
+  color: #222;
+  width: 220px;
+  min-width: 180px;
+  padding: 32px 0 0 0;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 32px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  color: #333;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.sidebar ul li {
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  color: #333;
+}
+
+.sidebar ul li:hover,
+.sidebar ul li.active {
+  background: rgba(255,255,255,0.18);
+  border-left: 4px solid #ff7e5f;
+  color: #ff7e5f;
+}
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  padding: 48px 32px;
+  background: #fff;
+  border-radius: 0 0 0 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  min-height: 100vh;
+}
+
+/* Section styles */
+section {
+  display: none;
+  animation: fadeIn 0.5s;
+}
+
+section.active {
+  display: block;
+}
+
+section h1, section h2 {
+  color: #ff7e5f;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+section p {
+  font-size: 1.1rem;
+  color: #444;
+}
+
+/* Responsive styles */
+@media (max-width: 900px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    min-width: unset;
+    padding: 16px 0;
+    box-shadow: none;
+    border-radius: 0 0 18px 18px;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .sidebar h2 {
+    margin-bottom: 0;
+    margin-right: 24px;
+    font-size: 1.2rem;
+  }
+  .sidebar ul {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+  }
+  .sidebar ul li {
+    padding: 12px 18px;
+    font-size: 1rem;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+  .sidebar ul li:hover,
+  .sidebar ul li.active {
+    background: rgba(255,255,255,0.18);
+    border-bottom: 3px solid #ff7e5f;
+    color: #ff7e5f;
+  }
+  .main-content {
+    border-radius: 0;
+    padding: 32px 8px;
+  }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+

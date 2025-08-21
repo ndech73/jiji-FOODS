@@ -33,10 +33,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/api/register", {
+      // ✅ Choose correct API endpoint
+      let endpoint =
+        role === "vendor"
+          ? "http://localhost:4000/api/register/vendor"
+          : "http://localhost:4000/api/register/customer";
+
+      // ✅ Include extra vendor-specific data if needed
+      let bodyData = { name, email, password, role };
+      if (role === "vendor") {
+        bodyData.shop_name = "My Shop"; // You can replace this with an actual input field for shop name
+      }
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, role }),
+        body: JSON.stringify(bodyData),
       });
 
       const data = await response.json();

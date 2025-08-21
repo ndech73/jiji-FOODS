@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | jiji FOODS</title>
+    <link rel="stylesheet" href="/styles/customer-dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <h2>jiji FOODS</h2>
+            <ul>
+                <li onclick="showSection('profile')">👤 Profile</li>
+                <li onclick="showSection('nearby-vendors')">📍 Find & Order Food</li>
+                <li onclick="showSection('cart')">🛒 Cart</li>
+                <li onclick="showSection('orders')">📦 My Orders</li>
+                <li onclick="logout()">🚪 Logout</li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <!-- Profile Section -->
+            <section id="profile" class="active">
+                <h1>Welcome, <span id="customer-name">Customer</span></h1>
+                <p>Email: <span id="customer-email"></span></p>
+            </section>
+
+            <!-- Nearby Vendors & Menu Combined -->
+            <section id="nearby-vendors">
+                <h2>Find Vendors Near Me</h2>
+                <button id="find-vendors-btn">Find Vendors</button>
+                <div id="vendors-list"></div>
+
+                <h2>Menu</h2>
+                <div id="menu-items"></div>
+            </section>
+
+            <!-- Cart Section -->
+            <section id="cart">
+                <h1>My Cart</h1>
+                <div id="cart-items"></div>
+                <button id="checkout-btn">Checkout</button>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders">
+                <h1>My Orders</h1>
+                <div id="orders-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/scripts/customer-dashboard.js"></script>
+</body>
+</html>

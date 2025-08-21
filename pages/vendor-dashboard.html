@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vendor Dashboard | jiji FOODS</title>
+  <link rel="stylesheet" href="/styles/vendor-dashboard.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>jiji FOODS</h2>
+      <ul>
+        <li onclick="showSection('profile')">👤 Profile</li>
+        <li onclick="showSection('menu')">🍽 Manage Menu</li>
+        <li onclick="showSection('orders')">📦 Orders</li>
+        <li onclick="logout()">🚪 Logout</li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Profile Section -->
+      <section id="profile" class="active">
+        <h1>Welcome, <span id="vendor-name">Vendor</span></h1>
+        <p>Email: <span id="vendor-email"></span></p>
+
+        <div class="shop-update">
+          <label for="vendor-shop-input">Shop Name:</label>
+          <input 
+            type="text" 
+            id="shop-name-input" 
+            placeholder="Enter your shop name" 
+            required 
+          />
+          <button id="save-shop-btn">Save Shop Name</button>
+        </div>
+      </section>
+
+      <!-- Menu Section -->
+      <section id="menu">
+        <h2>My Menu</h2>
+        <div id="menu-list"></div>
+
+        <h3>Add New Menu Item</h3>
+        <form id="add-menu-form">
+          <input 
+            type="text" 
+            id="item-name" 
+            placeholder="Item Name" 
+            required 
+          />
+          <input 
+            type="number" 
+            id="item-price" 
+            placeholder="Price (Ksh)" 
+            required 
+          />
+          <button type="submit">Add Item</button>
+        </form>
+      </section>
+
+      <!-- Orders Section -->
+      <section id="orders">
+        <h2>Customer Orders</h2>
+        <div id="order-list"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/scripts/vendor-dashboard.js"></script>
+</body>
+</html>
