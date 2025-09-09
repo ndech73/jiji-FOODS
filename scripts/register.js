@@ -1,11 +1,6 @@
-function togglePassword(fieldId) {
-  const input = document.getElementById(fieldId);
-  input.type = input.type === "password" ? "text" : "password";
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("registerForm");
-  const messageDiv = document.getElementById("formMessage"); // ✅ This div displays the message
+  const messageDiv = document.getElementById("formMessage");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -16,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmPassword = document.getElementById("confirmPassword").value;
     const role = document.getElementById("role").value;
 
-    // Clear previous message
     messageDiv.textContent = "";
     messageDiv.style.color = "";
 
@@ -33,42 +27,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      // ✅ Choose correct API endpoint
-      let endpoint =
-        role === "vendor"
-          ? "http://localhost:4000/api/register/vendor"
-          : "http://localhost:4000/api/register/customer";
-
-      // ✅ Include extra vendor-specific data if needed
-      let bodyData = { name, email, password, role };
-      if (role === "vendor") {
-        bodyData.shop_name = "My Shop"; // You can replace this with an actual input field for shop name
-      }
-
-      const response = await fetch(endpoint, {
+      const response = await fetch("http://localhost:4000/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
+        body: JSON.stringify({ name, email, password, role }),
       });
 
       const data = await response.json();
 
-      if (response.ok) {
-        messageDiv.textContent = "✅ Registration successful! Redirecting to login...";
-        messageDiv.style.color = "green";
-
-        // Delay before redirecting
-        setTimeout(() => {
-          window.location.href = "/pages/login.html";
-        }, 2000);
-      } else {
+      if (!response.ok) {
         messageDiv.textContent = `❌ ${data.error || "Registration failed"}`;
         messageDiv.style.color = "red";
+        return;
       }
+
+      // Save user only if backend returned it
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
+
+      messageDiv.textContent = "✅ Registration successful! Redirecting...";
+      messageDiv.style.color = "green";
+
+      setTimeout(() => {
+        if (role === "vendor") {
+          // If vendor registration requires shop setup, redirect to become-vendor
+          window.location.href = "/pages/become-vendor.html";
+        } else {
+          window.location.href = "/pages/customer-dashboard.html";
+        }
+      }, 1500);
+
     } catch (err) {
+      console.error("Registration error:", err);
       messageDiv.textContent = "❌ Server error. Please try again later.";
       messageDiv.style.color = "red";
-      console.error(err);
     }
   });
 });

@@ -468,3 +468,29 @@ nav ul li a:hover, nav ul li a.active {
     border-top: 1px solid rgba(255,255,255,0.10);
     margin-top: 12px;
 }
+/* Styles targeting only your “My Shop” button */
+#myShopBtn {
+  padding: 10px 18px;
+  background: transparent;
+  color: #000;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Hover state to match your other nav links */
+#myShopBtn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #333;
+}
+
+/* Active state if you toggle an “active” class in JS */
+#myShopBtn.active {
+  background: #333;
+  color: #FFCA3A;
+}
+

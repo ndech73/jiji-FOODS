@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+</head>
+<body>
+  <p>Redirecting to your cart...</p>
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user && user.role === "vendor") {
+      // ✅ Vendor logged in → go to vendor dashboard cart section
+      window.location.href = "/pages/vendor-dashboard.html#cart";
+    } else if (user && user.role === "customer") {
+      // ✅ Customer logged in → go to customer dashboard cart section
+      window.location.href = "/pages/customer-dashboard.html#cart";
+    } else {
+      // ❌ Not logged in → go to registration/login
+      window.location.href = "/pages/register.html";
+    }
+  </script>
+</body>
+</html>

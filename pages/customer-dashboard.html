@@ -51,6 +51,16 @@
         </main>
     </div>
 
-    <script src="/scripts/customer-dashboard.js"></script>
+    <script src="/scripts/customer-dashboard.js">
+         document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || user.role.toLowerCase() !== "customer") {
+      // Not logged in → send back to login
+      window.location.href = "login.html";
+    } else {
+      console.log("✅ Welcome", user.name);
+    }
+  });
+    </script>
 </body>
 </html>

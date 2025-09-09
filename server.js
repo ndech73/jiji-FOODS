@@ -1,6 +1,7 @@
 // server.js
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const { Pool } = require("pg");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
@@ -14,12 +15,24 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/pages", express.static(path.join(__dirname, "pages")));
+app.use("/scripts", express.static(path.join(__dirname, "scripts")));
+app.use("/styles", express.static(path.join(__dirname, "styles")));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+app.use("/images", express.static(path.join(__dirname, "images")));
+
+// Default route -> homepage
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "pages", "homepage.html"));
+});
+
+
 // ----------------- PostgreSQL -----------------
 const pool = new Pool({
   user: "postgres",
   host: "localhost",
   database: "jiji_foods",
-  password: "your_password",
+  password: "Daniel_254",
   port: 5432,
 });
 
@@ -34,40 +47,69 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// ----------------- Registration -----------------
+// ----------------- REGISTRATION -----------------
 app.post("/api/register", async (req, res) => {
-  const { name, email, password, role } = req.body;
-  if (!name || !email || !password || !role) return res.status(400).json({ error: "Missing fields" });
+  const { name, email, password } = req.body;
 
   try {
-    const hashed = await bcrypt.hash(password, 10);
+    // 1. Check if user exists
+    const existingUser = await pool.query(
+      "SELECT * FROM users WHERE email = $1",
+      [email]
+    );
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ error: "Email already registered" });
+    }
+
+    // 2. Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 3. Insert new user
     const result = await pool.query(
       "INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role",
-      [name, email, hashed, role]
+      [name, email, hashedPassword, "customer"]
     );
-    res.json({ user: result.rows[0] });
+
+    res.status(201).json({
+      message: "User registered successfully",
+      user: result.rows[0]
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Registration failed" });
+    console.error("Registration error:", err);
+    res.status(500).json({ error: "Server error during registration" });
   }
 });
+
 
 // ----------------- Login -----------------
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: "Missing email or password" });
+  console.log("📩 Login attempt:", email);
+
+  if (!email || !password) {
+    console.log("⚠️ Missing email or password");
+    return res.status(400).json({ error: "Missing email or password" });
+  }
 
   try {
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-    if (result.rows.length === 0) return res.status(401).json({ error: "Invalid credentials" });
+    if (result.rows.length === 0) {
+      console.log("❌ No user found for", email);
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
 
     const user = result.rows[0];
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ error: "Invalid credentials" });
 
+    if (!match) {
+      console.log("❌ Wrong password for", email);
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    console.log("✅ Login successful for", email);
     res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (err) {
-    console.error(err);
+    console.error("🔥 Login server error:", err);
     res.status(500).json({ error: "Login failed" });
   }
 });
@@ -143,6 +185,19 @@ app.put("/api/vendor/shop", async (req, res) => {
   }
 });
 
+// ----------------- Orders API -----------------
+app.get("/api/orders", async (req, res) => {
+  try {
+    // Use id for ordering since created_at does not exist
+    const result = await pool.query("SELECT * FROM orders ORDER BY id DESC");
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+    res.status(500).json({ error: "Failed to fetch orders" });
+  }
+});
+
+
 // ----------------- Get Vendor Menu -----------------
 app.get("/api/vendor/menu", async (req, res) => {
   const vendor_id = Number(req.query.vendor_id);
@@ -176,6 +231,55 @@ app.get("/api/vendor/orders", async (req, res) => {
     res.status(500).json({ error: "Failed to load orders" });
   }
 });
+
+app.get("/test", (req, res) => {
+  res.sendFile(path.join(__dirname, "pages", "vendor-dashboard.html"));
+});
+
+// ---------------- Check if user is vendor ----------------
+app.get("/api/check-vendor/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const result = await pool.query(
+      "SELECT role FROM users WHERE id = $1",
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const isVendor = result.rows[0].role === "vendor";
+    res.json({ isVendor });
+  } catch (err) {
+    console.error("Error checking vendor:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+// ---------------- Become Vendor ----------------
+app.post("/api/become-vendor", async (req, res) => {
+  const { userId, shopName } = req.body;
+
+  if (!userId || !shopName) {
+    return res.status(400).json({ error: "Missing userId or shopName" });
+  }
+
+  try {
+    await pool.query(
+      "UPDATE users SET role = 'vendor', shop_name = $1 WHERE id = $2",
+      [shopName, userId]
+    );
+
+    res.json({ message: "You are now a vendor!" });
+  } catch (err) {
+    console.error("Error upgrading user to vendor:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 // ----------------- Start Server -----------------
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

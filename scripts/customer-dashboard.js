@@ -8,28 +8,48 @@ function showSection(sectionId) {
     document.getElementById(sectionId).classList.add("active");
 }
 
+function showSection(sectionId) {
+  document.querySelectorAll("main section").forEach(section => {
+    section.classList.remove("active");
+  });
+  document.getElementById(sectionId).classList.add("active");
+}
+
+// On page load, check for hash (#cart, #orders, etc.)
+document.addEventListener("DOMContentLoaded", () => {
+  const section = window.location.hash.substring(1); // e.g. "cart"
+  if (section) {
+    showSection(section);
+  }
+});
+
+
 // ✅ Logout and redirect
 function logout() {
-    localStorage.removeItem("customerName");
-    localStorage.removeItem("customerEmail");
+    localStorage.removeItem("user");
     alert("You have been logged out.");
     window.location.href = "/pages/login.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     // ✅ Load customer info from localStorage
-    const name = localStorage.getItem("customerName");
-    const email = localStorage.getItem("customerEmail");
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    if (!name || !email) {
+    if (!user || !user.role || user.role.toLowerCase() !== "customer") {
         // If not logged in, redirect to login
         window.location.href = "/pages/login.html";
         return;
     }
 
     // Set profile info
-    document.getElementById("customer-name").textContent = name;
-    document.getElementById("customer-email").textContent = email;
+    document.getElementById("customer-name").textContent = user.name;
+    document.getElementById("customer-email").textContent = user.email;
+
+    // if landing with cart, show cart
+    const section = window.location.hash.substring(1); 
+    if (section) {
+        showSection(section);
+    }
 
     // ✅ Find Vendors button click
     document.getElementById("find-vendors-btn").addEventListener("click", () => {
@@ -116,10 +136,16 @@ function removeFromCart(index) {
 }
 
 // 🛠 Placeholder: Load orders
+// 🛠 Placeholder: Load orders
 function loadOrders() {
-    fetch("/api/orders") // Adjust backend route
+    fetch("/api/orders")
         .then(res => res.json())
         .then(orders => {
+            if (!Array.isArray(orders)) {
+                console.error("❌ Orders API did not return an array:", orders);
+                return;
+            }
+
             const ordersList = document.getElementById("orders-list");
             ordersList.innerHTML = "";
 
@@ -129,7 +155,7 @@ function loadOrders() {
                 div.innerHTML = `
                     <h4>Order #${order.id}</h4>
                     <p>Status: ${order.status}</p>
-                    <p>Total: Ksh ${order.total}</p>
+                    <p>Customer: ${order.customer_name}</p>
                 `;
                 ordersList.appendChild(div);
             });

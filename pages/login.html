@@ -9,33 +9,52 @@
 <body>
   <div class="login-container">
     <h2>Login to jiji FOODS</h2>
-    <form id="loginForm">
-      <label for="email">Email:</label>
-      <input type="email" id="email" required />
 
+    <!-- ✅ Clean form, no duplicates -->
+    <form id="loginForm" action="javascript:void(0);">
+      
+      <!-- Email field -->
+      <label for="email">Email:</label>
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        placeholder="Enter your email" 
+        required 
+      />
+
+      <!-- Password field with toggle -->
       <label for="password">Password:</label>
       <div class="password-wrapper">
-        <input type="password" id="password" required />
-        <button type="button" id="togglePassword">Show</button>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="Enter your password" 
+          required 
+        />
+        <span id="togglePassword" class="toggle-password">👁</span>
       </div>
 
+      <!-- Remember Me -->
       <div class="remember-me">
-  <input type="checkbox" id="rememberMe" />
-  <label for="rememberMe">Remember Me</label>
-</div>
+        <input type="checkbox" id="rememberMe" />
+        <label for="rememberMe">Remember Me</label>
+      </div>
 
+      <!-- Submit button -->
       <button type="submit">Login</button>
+
+      <!-- Error message -->
       <p id="error-message" class="error-message"></p>
 
+      <!-- Links -->
       <p class="register-link">
-        Don't have an account? <a href="register.html">Register here</a>
+        Don’t have an account? <a href="register.html">Register here</a>
       </p>
-
-      
-<p class="forgot-password">
-    <a href="forgot-password.html">Forgot your password?</a>
-</p>
-
+      <p class="forgot-password">
+        <a href="forgot-password.html">Forgot your password?</a>
+      </p>
     </form>
   </div>
 

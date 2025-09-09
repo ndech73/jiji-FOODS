@@ -11,6 +11,7 @@ if (!vendor_id) {
   window.location.href = "/pages/login.html";
 }
 
+
 // =======================
 // Populate profile
 // =======================
